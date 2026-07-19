@@ -1,16 +1,25 @@
+enum Role {
+    TENANT
+    LANDLORD
+    ADMIN
+}
+
 enum UserStatus {
-  ACTIVE
-  BANNED
+    ACTIVE
+    BANNED
 }
 
 model User {
-    id       String  @id @default(uuid())
-    name     String
-    email    String  @unique
+    id       String     @id @default(uuid())
+    name     String     @db.VarChar(20)
+    email    String     @unique
     password String
     phone    String?
-    status  UserStatus @default(ACTIVE)
+    status   UserStatus @default(ACTIVE)
+    role     Role       @default(TENANT)
 
-    createAt DateTime @default(now())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 
+    @@map("users")
 }
