@@ -21,5 +21,9 @@ model User {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
+    properties Property[]
+    rentals RentalRequest[]
+    reviews Review[]
+
     @@map("users")
 }
