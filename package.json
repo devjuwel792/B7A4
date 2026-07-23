@@ -13,6 +13,7 @@
     "start": "node dist/server.js"
   },
   "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/morgan": "^1.9.10",
     "@types/node": "^26.1.1",
     "@types/pg": "^8.20.0",
@@ -32,6 +33,7 @@
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "http-status": "^2.1.0",
+    "jsonwebtoken": "^9.0.3",
     "morgan": "^1.11.0",
     "pg": "^8.22.0"
   }

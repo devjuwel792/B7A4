@@ -19,7 +19,7 @@ const getAllUsers = async (req: Request, res: Response) => {
 
 const updateUserStatus = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const { status } = req.body;
 
     if (!status || !["ACTIVE", "BANNED"].includes(status)) {
