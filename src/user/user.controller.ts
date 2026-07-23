@@ -3,16 +3,35 @@ import { AdminService } from "./user.service";
 
 const getAllUsers = async (req: Request, res: Response) => {
   try {
-    const users = await AdminService.getAllUsers();
+    const role = req.query.role as string | undefined;
+    const users = await AdminService.getAllUsers(role);
     res.status(200).json({
       success: true,
-      message: "All users retrieved successfully",
+      message: role
+        ? `${role} users retrieved successfully`
+        : "All users retrieved successfully",
       data: users,
     });
   } catch (error: any) {
     res.status(500).json({
       success: false,
       message: error.message || "Failed to retrieve users",
+    });
+  }
+};
+
+const getLandlords = async (req: Request, res: Response) => {
+  try {
+    const landlords = await AdminService.getAllUsers("LANDLORD");
+    res.status(200).json({
+      success: true,
+      message: "Landlords retrieved successfully",
+      data: landlords,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message || "Failed to retrieve landlords",
     });
   }
 };
@@ -77,6 +96,7 @@ const getAllRentals = async (req: Request, res: Response) => {
 
 export const AdminController = {
   getAllUsers,
+  getLandlords,
   updateUserStatus,
   getAllProperties,
   getAllRentals,
