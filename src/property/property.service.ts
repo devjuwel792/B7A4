@@ -161,6 +161,35 @@ const deleteProperty = async (id: string, userId: string) => {
   return { message: "Property deleted successfully" };
 };
 
+const togglePropertyAvailability = async (id: string, userId: string) => {
+  const existingProperty = await prisma.property.findUnique({
+    where: { id },
+  });
+
+  if (!existingProperty) {
+    throw new Error("Property not found");
+  }
+
+  if (existingProperty.landlordId !== userId) {
+    throw new Error("You can only update your own properties");
+  }
+
+  const property = await prisma.property.update({
+    where: { id },
+    data: { available: !existingProperty.available },
+    include: {
+      category: {
+        select: { id: true, name: true },
+      },
+      landlord: {
+        select: { id: true, name: true, email: true, phone: true },
+      },
+    },
+  });
+
+  return property;
+};
+
 export const PropertyService = {
   createProperty,
   getAllProperties,
@@ -168,4 +197,5 @@ export const PropertyService = {
   getMyProperties,
   updateProperty,
   deleteProperty,
+  togglePropertyAvailability,
 };

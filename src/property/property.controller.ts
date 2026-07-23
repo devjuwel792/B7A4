@@ -209,6 +209,34 @@ const deleteProperty = async (req: Request, res: Response) => {
   }
 };
 
+const togglePropertyAvailability = async (req: Request, res: Response) => {
+  try {
+    const landlordId = req.user?.userId;
+    if (!landlordId) {
+      return res.status(401).json({
+        success: false,
+        message: "Authentication required",
+      });
+    }
+
+    const { id } = req.params;
+    const property = await PropertyService.togglePropertyAvailability(
+      id,
+      landlordId,
+    );
+    res.status(200).json({
+      success: true,
+      message: `Property ${property.available ? "made available" : "marked as unavailable"} successfully`,
+      data: property,
+    });
+  } catch (error: any) {
+    res.status(400).json({
+      success: false,
+      message: error.message || "Failed to toggle property availability",
+    });
+  }
+};
+
 export const PropertyController = {
   createProperty,
   getAllProperties,
@@ -216,4 +244,5 @@ export const PropertyController = {
   getMyProperties,
   updateProperty,
   deleteProperty,
+  togglePropertyAvailability,
 };

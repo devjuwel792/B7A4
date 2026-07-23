@@ -13,6 +13,11 @@ router.get(
 );
 router.get("/:id", authMiddleware, PropertyController.getPropertyById);
 router.put("/:id", authMiddleware, PropertyController.updateProperty);
+router.patch(
+  "/:id/availability",
+  authMiddleware,
+  PropertyController.togglePropertyAvailability,
+);
 router.delete("/:id", authMiddleware, PropertyController.deleteProperty);
 
 export const propertyRoutes = router;
