@@ -4,6 +4,7 @@ import express, { Application, type Request, type Response } from "express";
 import morgan from "morgan";
 
 import { authRoutes } from "./auth/auth.route";
+import { categoryRoutes } from "./category/category.route";
 import config from "./config";
 import { adminRoutes } from "./user/user.route";
 
@@ -22,6 +23,7 @@ app.use(cookieParser());
 
 app.use("/api/admin", adminRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/category", categoryRoutes);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello World!");
