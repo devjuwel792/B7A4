@@ -100,4 +100,3 @@ export const AdminController = {
   updateUserStatus,
   getAllProperties,
   getAllRentals,
-};

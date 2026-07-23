@@ -49,10 +49,12 @@ const updateUserStatus = async (id: string, status: "ACTIVE" | "BANNED") => {
   return user;
 };
 
-const getAllProperties = async () => {
-  const properties = await prisma.property.findMany({
+
+
+const getAllRentals = async () => {
+  const rentals = await prisma.rentalRequest.findMany({
     include: {
-      landlord: {
+      tenant: {
         select: {
           id: true,
           name: true,
@@ -60,28 +62,24 @@ const getAllProperties = async () => {
           phone: true,
         },
       },
-      category: {
+      property: {
         select: {
           id: true,
-          name: true,
+          title: true,
+          address: true,
+          rent: true,
         },
       },
-      _count: {
-        select: {
-          rentals: true,
-          reviews: true,
-        },
-      },
+      payment: true,
     },
   });
 
-  return properties;
+  return rentals;
 };
-
-
 
 export const AdminService = {
   getAllUsers,
   updateUserStatus,
-  getAllProperties,
+ 
+  getAllRentals,
 };

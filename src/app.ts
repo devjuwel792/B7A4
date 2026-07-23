@@ -6,6 +6,7 @@ import morgan from "morgan";
 import { authRoutes } from "./auth/auth.route";
 import { categoryRoutes } from "./category/category.route";
 import config from "./config";
+import { propertyRoutes } from "./property/property.route";
 import { adminRoutes } from "./user/user.route";
 
 export const app: Application = express();
@@ -24,6 +25,7 @@ app.use(cookieParser());
 app.use("/api/admin", adminRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/category", categoryRoutes);
+app.use("/api/property", propertyRoutes);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello World!");
