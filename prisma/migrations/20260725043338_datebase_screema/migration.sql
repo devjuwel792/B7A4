@@ -7,6 +7,12 @@ CREATE TYPE "PaymentStatus" AS ENUM ('PENDING', 'PAID', 'FAILED');
 -- CreateEnum
 CREATE TYPE "RentalStatus" AS ENUM ('PENDING', 'APPROVED', 'REJECTED', 'ACTIVE', 'COMPLETED');
 
+-- CreateEnum
+CREATE TYPE "Role" AS ENUM ('TENANT', 'LANDLORD', 'ADMIN');
+
+-- CreateEnum
+CREATE TYPE "UserStatus" AS ENUM ('ACTIVE', 'BANNED');
+
 -- CreateTable
 CREATE TABLE "categories" (
     "id" TEXT NOT NULL,
@@ -74,11 +80,29 @@ CREATE TABLE "reviews" (
     CONSTRAINT "reviews_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "users" (
+    "id" TEXT NOT NULL,
+    "name" VARCHAR(20) NOT NULL,
+    "email" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
+    "phone" TEXT,
+    "status" "UserStatus" NOT NULL DEFAULT 'ACTIVE',
+    "role" "Role" NOT NULL DEFAULT 'TENANT',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "users_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "categories_name_key" ON "categories"("name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "payments_rentalId_key" ON "payments"("rentalId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
 -- AddForeignKey
 ALTER TABLE "payments" ADD CONSTRAINT "payments_rentalId_fkey" FOREIGN KEY ("rentalId") REFERENCES "rental_requests"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

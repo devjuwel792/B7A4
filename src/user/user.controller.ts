@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import { AdminService } from "./user.service";
+import { PropertyService } from "../property/property.service";
 
 const getAllUsers = async (req: Request, res: Response) => {
   try {
@@ -64,7 +65,7 @@ const updateUserStatus = async (req: Request, res: Response) => {
 
 const getAllProperties = async (req: Request, res: Response) => {
   try {
-    const properties = await AdminService.getAllProperties();
+    const properties = await PropertyService.getAllProperties();
     res.status(200).json({
       success: true,
       message: "All properties retrieved successfully",
@@ -100,3 +101,4 @@ export const AdminController = {
   updateUserStatus,
   getAllProperties,
   getAllRentals,
+}
