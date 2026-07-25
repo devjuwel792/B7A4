@@ -1,23 +1,28 @@
 import { Router } from "express";
-import authMiddleware from "../middleware/auth.middleware";
+import authMiddleware, { roleGuard } from "../middleware/auth.middleware";
 import { RentalController } from "./rental.controller";
 
 const router = Router();
 
-// Landlord routes
 router.get(
   "/landlord/requests",
   authMiddleware,
+  roleGuard("LANDLORD"),
   RentalController.getLandlordRequests,
 );
 router.patch(
   "/landlord/requests/:id",
   authMiddleware,
+  roleGuard("LANDLORD"),
   RentalController.updateRequestStatus,
 );
 
-// Tenant routes
-router.post("/rentals", authMiddleware, RentalController.createRentalRequest);
+router.post(
+  "/rentals",
+  authMiddleware,
+  roleGuard("TENANT"),
+  RentalController.createRentalRequest,
+);
 router.get("/rentals", authMiddleware, RentalController.getUserRentals);
 router.get("/rentals/:id", authMiddleware, RentalController.getRentalById);
 

@@ -1,4 +1,5 @@
 import { prisma } from "../lib/prisma";
+import type { Prisma } from "../../generated/prisma/client";
 
 interface CreatePropertyData {
   title: string;
@@ -41,8 +42,47 @@ const createProperty = async (data: CreatePropertyData, landlordId: string) => {
   return property;
 };
 
-const getAllProperties = async () => {
+const getAllProperties = async (query?: {
+  location?: string;
+  minRent?: string;
+  maxRent?: string;
+  categoryId?: string;
+  bedrooms?: string;
+  search?: string;
+}) => {
+  const where: Prisma.PropertyWhereInput = {
+    available: true,
+  };
+
+  if (query?.search) {
+    where.OR = [
+      { title: { contains: query.search, mode: "insensitive" } },
+      { description: { contains: query.search, mode: "insensitive" } },
+      { location: { contains: query.search, mode: "insensitive" } },
+      { address: { contains: query.search, mode: "insensitive" } },
+    ];
+  }
+
+  if (query?.location) {
+    where.location = { contains: query.location, mode: "insensitive" };
+  }
+
+  if (query?.minRent || query?.maxRent) {
+    where.rent = {};
+    if (query.minRent) where.rent.gte = Number(query.minRent);
+    if (query.maxRent) where.rent.lte = Number(query.maxRent);
+  }
+
+  if (query?.categoryId) {
+    where.categoryId = query.categoryId;
+  }
+
+  if (query?.bedrooms) {
+    where.bedrooms = Number(query.bedrooms);
+  }
+
   const properties = await prisma.property.findMany({
+    where,
     include: {
       category: {
         select: { id: true, name: true },
@@ -53,6 +93,9 @@ const getAllProperties = async () => {
       _count: {
         select: { rentals: true, reviews: true },
       },
+    },
+    orderBy: {
+      createdAt: "desc",
     },
   });
 
@@ -68,6 +111,14 @@ const getPropertyById = async (id: string) => {
       },
       landlord: {
         select: { id: true, name: true, email: true, phone: true },
+      },
+      reviews: {
+        include: {
+          tenant: {
+            select: { id: true, name: true },
+          },
+        },
+        orderBy: { createdAt: "desc" },
       },
       _count: {
         select: { rentals: true, reviews: true },
@@ -92,6 +143,9 @@ const getMyProperties = async (landlordId: string) => {
       _count: {
         select: { rentals: true, reviews: true },
       },
+    },
+    orderBy: {
+      createdAt: "desc",
     },
   });
 

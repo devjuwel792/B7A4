@@ -1,23 +1,41 @@
 import { Router } from "express";
-import authMiddleware from "../middleware/auth.middleware";
+import authMiddleware, { roleGuard } from "../middleware/auth.middleware";
 import { PropertyController } from "./property.controller";
 
 const router = Router();
 
-router.post("/", authMiddleware, PropertyController.createProperty);
-router.get("/", authMiddleware, PropertyController.getAllProperties);
+router.get("/", PropertyController.getAllProperties);
+router.get("/:id", PropertyController.getPropertyById);
+
+router.post(
+  "/",
+  authMiddleware,
+  roleGuard("LANDLORD"),
+  PropertyController.createProperty,
+);
 router.get(
   "/my-properties",
   authMiddleware,
+  roleGuard("LANDLORD"),
   PropertyController.getMyProperties,
 );
-router.get("/:id", authMiddleware, PropertyController.getPropertyById);
-router.put("/:id", authMiddleware, PropertyController.updateProperty);
+router.put(
+  "/:id",
+  authMiddleware,
+  roleGuard("LANDLORD"),
+  PropertyController.updateProperty,
+);
 router.patch(
   "/:id/availability",
   authMiddleware,
+  roleGuard("LANDLORD"),
   PropertyController.togglePropertyAvailability,
 );
-router.delete("/:id", authMiddleware, PropertyController.deleteProperty);
+router.delete(
+  "/:id",
+  authMiddleware,
+  roleGuard("LANDLORD"),
+  PropertyController.deleteProperty,
+);
 
 export const propertyRoutes = router;

@@ -44,7 +44,7 @@ const getAllCategories = async (req: Request, res: Response) => {
 
 const getCategoryById = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const category = await CategoryService.getCategoryById(id);
     res.status(200).json({
       success: true,
@@ -61,7 +61,7 @@ const getCategoryById = async (req: Request, res: Response) => {
 
 const updateCategory = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const { name } = req.body;
 
     if (!name) {
@@ -87,7 +87,7 @@ const updateCategory = async (req: Request, res: Response) => {
 
 const deleteCategory = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const result = await CategoryService.deleteCategory(id);
     res.status(200).json({
       success: true,

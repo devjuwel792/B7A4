@@ -74,7 +74,18 @@ const createProperty = async (req: Request, res: Response) => {
 
 const getAllProperties = async (req: Request, res: Response) => {
   try {
-    const properties = await PropertyService.getAllProperties();
+    const { location, minRent, maxRent, categoryId, bedrooms, search } =
+      req.query;
+
+    const properties = await PropertyService.getAllProperties({
+      location: location as string | undefined,
+      minRent: minRent as string | undefined,
+      maxRent: maxRent as string | undefined,
+      categoryId: categoryId as string | undefined,
+      bedrooms: bedrooms as string | undefined,
+      search: search as string | undefined,
+    });
+
     res.status(200).json({
       success: true,
       message: "Properties retrieved successfully",
@@ -90,7 +101,7 @@ const getAllProperties = async (req: Request, res: Response) => {
 
 const getPropertyById = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const property = await PropertyService.getPropertyById(id);
     res.status(200).json({
       success: true,
@@ -139,7 +150,7 @@ const updateProperty = async (req: Request, res: Response) => {
       });
     }
 
-    const { id } = req.params;
+    const id = req.params.id as string;
     const {
       title,
       description,
@@ -195,7 +206,7 @@ const deleteProperty = async (req: Request, res: Response) => {
       });
     }
 
-    const { id } = req.params;
+    const id = req.params.id as string;
     const result = await PropertyService.deleteProperty(id, landlordId);
     res.status(200).json({
       success: true,
@@ -219,7 +230,7 @@ const togglePropertyAvailability = async (req: Request, res: Response) => {
       });
     }
 
-    const { id } = req.params;
+    const id = req.params.id as string;
     const property = await PropertyService.togglePropertyAvailability(
       id,
       landlordId,

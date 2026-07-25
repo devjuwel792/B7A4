@@ -1,6 +1,5 @@
 import type { Request, Response } from "express";
 import { AdminService } from "./user.service";
-import { PropertyService } from "../property/property.service";
 
 const getAllUsers = async (req: Request, res: Response) => {
   try {
@@ -17,22 +16,6 @@ const getAllUsers = async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       message: error.message || "Failed to retrieve users",
-    });
-  }
-};
-
-const getLandlords = async (req: Request, res: Response) => {
-  try {
-    const landlords = await AdminService.getAllUsers("LANDLORD");
-    res.status(200).json({
-      success: true,
-      message: "Landlords retrieved successfully",
-      data: landlords,
-    });
-  } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      message: error.message || "Failed to retrieve landlords",
     });
   }
 };
@@ -65,7 +48,15 @@ const updateUserStatus = async (req: Request, res: Response) => {
 
 const getAllProperties = async (req: Request, res: Response) => {
   try {
-    const properties = await PropertyService.getAllProperties();
+    const { prisma } = await import("../lib/prisma");
+    const properties = await prisma.property.findMany({
+      include: {
+        category: { select: { id: true, name: true } },
+        landlord: { select: { id: true, name: true, email: true } },
+        _count: { select: { rentals: true, reviews: true } },
+      },
+      orderBy: { createdAt: "desc" },
+    });
     res.status(200).json({
       success: true,
       message: "All properties retrieved successfully",
@@ -97,8 +88,7 @@ const getAllRentals = async (req: Request, res: Response) => {
 
 export const AdminController = {
   getAllUsers,
-  getLandlords,
   updateUserStatus,
   getAllProperties,
   getAllRentals,
-}
+};

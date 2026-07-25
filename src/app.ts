@@ -6,15 +6,16 @@ import morgan from "morgan";
 import { authRoutes } from "./auth/auth.route";
 import { categoryRoutes } from "./category/category.route";
 import config from "./config";
+import { adminRoutes } from "./user/user.route";
 import { propertyRoutes } from "./property/property.route";
 import { rentalRoutes } from "./rental/rental.route";
-import { adminRoutes } from "./user/user.route";
+import { reviewRoutes } from "./review/review.route";
 
 export const app: Application = express();
 
 app.use(
   cors({
-    origin: config.app_url,
+    origin: config.client_url,
     credentials: true,
   }),
 );
@@ -23,12 +24,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-app.use("/api/admin", adminRoutes);
 app.use("/api/auth", authRoutes);
-app.use("/api/category", categoryRoutes);
-app.use("/api/property", propertyRoutes);
+app.use("/api/properties", propertyRoutes);
+app.use("/api/categories", categoryRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api/landlord", rentalRoutes);
 app.use("/api", rentalRoutes);
+app.use("/api", reviewRoutes);
 
 app.get("/", (req: Request, res: Response) => {
-  res.send("Hello World!");
+  res.send("RentNest API is running");
 });
