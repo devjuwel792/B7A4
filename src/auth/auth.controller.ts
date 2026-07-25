@@ -12,10 +12,10 @@ const register = async (req: Request, res: Response) => {
       });
     }
 
-    if (!["TENANT", "LANDLORD"].includes(role)) {
+    if (!["TENANT", "LANDLORD", "ADMIN"].includes(role)) {
       return res.status(400).json({
         success: false,
-        message: "Role must be TENANT or LANDLORD",
+        message: "Role must be TENANT, LANDLORD, or ADMIN",
       });
     }
 

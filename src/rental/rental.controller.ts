@@ -35,7 +35,7 @@ const updateRequestStatus = async (req: Request, res: Response) => {
       });
     }
 
-    const id = req.params.id as string;
+    const { id } = req.params;
     const { status } = req.body;
 
     if (!status || !["APPROVED", "REJECTED"].includes(status)) {
@@ -131,7 +131,7 @@ const getRentalById = async (req: Request, res: Response) => {
       });
     }
 
-    const id = req.params.id as string;
+    const { id } = req.params;
     const rental = await RentalService.getRentalById(id, userId);
     res.status(200).json({
       success: true,

@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import { AdminService } from "./user.service";
+import { PropertyService } from "../property/property.service";
 
 const getAllUsers = async (req: Request, res: Response) => {
   try {
@@ -20,7 +21,7 @@ const getAllUsers = async (req: Request, res: Response) => {
   }
 };
 
-const getLandlords = async (_req: Request, res: Response) => {
+const getLandlords = async (req: Request, res: Response) => {
   try {
     const landlords = await AdminService.getAllUsers("LANDLORD");
     res.status(200).json({
@@ -62,9 +63,9 @@ const updateUserStatus = async (req: Request, res: Response) => {
   }
 };
 
-const getAllProperties = async (_req: Request, res: Response) => {
+const getAllProperties = async (req: Request, res: Response) => {
   try {
-    const properties = await AdminService.getAllProperties();
+    const properties = await PropertyService.getAllProperties();
     res.status(200).json({
       success: true,
       message: "All properties retrieved successfully",
@@ -78,7 +79,7 @@ const getAllProperties = async (_req: Request, res: Response) => {
   }
 };
 
-const getAllRentals = async (_req: Request, res: Response) => {
+const getAllRentals = async (req: Request, res: Response) => {
   try {
     const rentals = await AdminService.getAllRentals();
     res.status(200).json({
@@ -100,4 +101,4 @@ export const AdminController = {
   updateUserStatus,
   getAllProperties,
   getAllRentals,
-};
+}
