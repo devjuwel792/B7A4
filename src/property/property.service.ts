@@ -1,20 +1,31 @@
 import { prisma } from "../lib/prisma";
 
-interface CreatePropertyData {
-  title: string;
-  description: string;
-  address: string;
-  location: string;
-  rent: number;
-  bedrooms: number;
-  bathrooms: number;
-  area?: number;
-  amenities: string[];
-  images: string[];
-  categoryId: string;
+interface PropertyFilter {
+  location?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  categoryId?: string;
+  bedrooms?: number;
+  amenities?: string;
+  search?: string;
 }
 
-const createProperty = async (data: CreatePropertyData, landlordId: string) => {
+const createProperty = async (
+  data: {
+    title: string;
+    description: string;
+    address: string;
+    location: string;
+    rent: number;
+    bedrooms: number;
+    bathrooms: number;
+    area?: number;
+    amenities: string[];
+    images: string[];
+    categoryId: string;
+  },
+  landlordId: string,
+) => {
   const category = await prisma.category.findUnique({
     where: { id: data.categoryId },
   });
@@ -29,31 +40,56 @@ const createProperty = async (data: CreatePropertyData, landlordId: string) => {
       landlordId,
     },
     include: {
-      category: {
-        select: { id: true, name: true },
-      },
-      landlord: {
-        select: { id: true, name: true, email: true, phone: true },
-      },
+      category: { select: { id: true, name: true } },
+      landlord: { select: { id: true, name: true, email: true, phone: true } },
     },
   });
 
   return property;
 };
 
-const getAllProperties = async () => {
+const getAllProperties = async (filters?: PropertyFilter) => {
+  const where: Record<string, any> = {};
+
+  if (filters?.location) {
+    where.location = { contains: filters.location, mode: "insensitive" };
+  }
+
+  if (filters?.minPrice !== undefined || filters?.maxPrice !== undefined) {
+    where.rent = {};
+    if (filters.minPrice !== undefined) where.rent.gte = filters.minPrice;
+    if (filters.maxPrice !== undefined) where.rent.lte = filters.maxPrice;
+  }
+
+  if (filters?.categoryId) {
+    where.categoryId = filters.categoryId;
+  }
+
+  if (filters?.bedrooms) {
+    where.bedrooms = filters.bedrooms;
+  }
+
+  if (filters?.amenities) {
+    const amenityList = filters.amenities.split(",").map((a) => a.trim());
+    where.amenities = { hasSome: amenityList };
+  }
+
+  if (filters?.search) {
+    where.OR = [
+      { title: { contains: filters.search, mode: "insensitive" } },
+      { description: { contains: filters.search, mode: "insensitive" } },
+      { address: { contains: filters.search, mode: "insensitive" } },
+    ];
+  }
+
   const properties = await prisma.property.findMany({
+    where,
     include: {
-      category: {
-        select: { id: true, name: true },
-      },
-      landlord: {
-        select: { id: true, name: true, email: true, phone: true },
-      },
-      _count: {
-        select: { rentals: true, reviews: true },
-      },
+      category: { select: { id: true, name: true } },
+      landlord: { select: { id: true, name: true, email: true, phone: true } },
+      _count: { select: { rentals: true, reviews: true } },
     },
+    orderBy: { createdAt: "desc" },
   });
 
   return properties;
@@ -63,15 +99,15 @@ const getPropertyById = async (id: string) => {
   const property = await prisma.property.findUnique({
     where: { id },
     include: {
-      category: {
-        select: { id: true, name: true },
+      category: { select: { id: true, name: true } },
+      landlord: { select: { id: true, name: true, email: true, phone: true } },
+      reviews: {
+        include: {
+          tenant: { select: { id: true, name: true } },
+        },
+        orderBy: { createdAt: "desc" },
       },
-      landlord: {
-        select: { id: true, name: true, email: true, phone: true },
-      },
-      _count: {
-        select: { rentals: true, reviews: true },
-      },
+      _count: { select: { rentals: true, reviews: true } },
     },
   });
 
@@ -86,13 +122,10 @@ const getMyProperties = async (landlordId: string) => {
   const properties = await prisma.property.findMany({
     where: { landlordId },
     include: {
-      category: {
-        select: { id: true, name: true },
-      },
-      _count: {
-        select: { rentals: true, reviews: true },
-      },
+      category: { select: { id: true, name: true } },
+      _count: { select: { rentals: true, reviews: true } },
     },
+    orderBy: { createdAt: "desc" },
   });
 
   return properties;
@@ -100,7 +133,7 @@ const getMyProperties = async (landlordId: string) => {
 
 const updateProperty = async (
   id: string,
-  data: Partial<CreatePropertyData>,
+  data: Record<string, any>,
   userId: string,
 ) => {
   const existingProperty = await prisma.property.findUnique({
@@ -119,7 +152,6 @@ const updateProperty = async (
     const category = await prisma.category.findUnique({
       where: { id: data.categoryId },
     });
-
     if (!category) {
       throw new Error("Category not found");
     }
@@ -129,12 +161,8 @@ const updateProperty = async (
     where: { id },
     data,
     include: {
-      category: {
-        select: { id: true, name: true },
-      },
-      landlord: {
-        select: { id: true, name: true, email: true, phone: true },
-      },
+      category: { select: { id: true, name: true } },
+      landlord: { select: { id: true, name: true, email: true, phone: true } },
     },
   });
 
@@ -154,10 +182,7 @@ const deleteProperty = async (id: string, userId: string) => {
     throw new Error("You can only delete your own properties");
   }
 
-  await prisma.property.delete({
-    where: { id },
-  });
-
+  await prisma.property.delete({ where: { id } });
   return { message: "Property deleted successfully" };
 };
 
@@ -178,12 +203,8 @@ const togglePropertyAvailability = async (id: string, userId: string) => {
     where: { id },
     data: { available: !existingProperty.available },
     include: {
-      category: {
-        select: { id: true, name: true },
-      },
-      landlord: {
-        select: { id: true, name: true, email: true, phone: true },
-      },
+      category: { select: { id: true, name: true } },
+      landlord: { select: { id: true, name: true, email: true, phone: true } },
     },
   });
 
