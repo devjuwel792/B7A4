@@ -74,7 +74,22 @@ const createProperty = async (req: Request, res: Response) => {
 
 const getAllProperties = async (req: Request, res: Response) => {
   try {
-    const properties = await PropertyService.getAllProperties();
+    const { location, minPrice, maxPrice, categoryId, bedrooms, amenities, search } = req.query;
+
+    const filters: Record<string, any> = {};
+    if (location) filters.location = location as string;
+    if (minPrice) filters.minPrice = Number(minPrice);
+    if (maxPrice) filters.maxPrice = Number(maxPrice);
+    if (categoryId) filters.categoryId = categoryId as string;
+    if (bedrooms) filters.bedrooms = Number(bedrooms);
+    if (amenities) filters.amenities = amenities as string;
+    if (search) filters.search = search as string;
+
+    const hasFilters = Object.keys(filters).length > 0;
+    const properties = await PropertyService.getAllProperties(
+      hasFilters ? filters : undefined,
+    );
+
     res.status(200).json({
       success: true,
       message: "Properties retrieved successfully",
@@ -154,7 +169,7 @@ const updateProperty = async (req: Request, res: Response) => {
       categoryId,
     } = req.body;
 
-    const updateData: any = {};
+    const updateData: Record<string, any> = {};
     if (title) updateData.title = title;
     if (description) updateData.description = description;
     if (address) updateData.address = address;
