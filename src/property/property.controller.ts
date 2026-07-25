@@ -90,7 +90,7 @@ const getAllProperties = async (req: Request, res: Response) => {
 
 const getPropertyById = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const property = await PropertyService.getPropertyById(id);
     res.status(200).json({
       success: true,
@@ -139,7 +139,7 @@ const updateProperty = async (req: Request, res: Response) => {
       });
     }
 
-    const { id } = req.params;
+    const id = req.params.id as string;
     const {
       title,
       description,
@@ -195,7 +195,7 @@ const deleteProperty = async (req: Request, res: Response) => {
       });
     }
 
-    const { id } = req.params;
+    const id = req.params.id as string;
     const result = await PropertyService.deleteProperty(id, landlordId);
     res.status(200).json({
       success: true,
@@ -219,7 +219,7 @@ const togglePropertyAvailability = async (req: Request, res: Response) => {
       });
     }
 
-    const { id } = req.params;
+    const id = req.params.id as string;
     const property = await PropertyService.togglePropertyAvailability(
       id,
       landlordId,
