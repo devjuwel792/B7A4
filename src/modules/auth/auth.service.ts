@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt, { type SignOptions } from "jsonwebtoken";
-import config from "../config";
-import { prisma } from "../lib/prisma";
+import config from "../../config";
+import { prisma } from "../../lib/prisma";
 
 const registerUser = async (data: {
   name: string;

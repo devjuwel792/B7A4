@@ -1,5 +1,5 @@
 import { Router } from "express";
-import authMiddleware, { roleGuard } from "../middleware/auth.middleware";
+import authMiddleware, { roleGuard } from "../../middleware/auth.middleware";
 import { PropertyController } from "./property.controller";
 
 const router = Router();

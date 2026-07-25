@@ -3,13 +3,14 @@ import cors from "cors";
 import express, { Application, type Request, type Response } from "express";
 import morgan from "morgan";
 
-import { authRoutes } from "./auth/auth.route";
-import { categoryRoutes } from "./category/category.route";
+import { authRoutes } from "./modules/auth/auth.route";
+import { categoryRoutes } from "./modules/category/category.route";
 import config from "./config";
-import { adminRoutes } from "./user/user.route";
-import { propertyRoutes } from "./property/property.route";
-import { rentalRoutes } from "./rental/rental.route";
-import { reviewRoutes } from "./review/review.route";
+import { adminRoutes } from "./modules/user/user.route";
+import { propertyRoutes } from "./modules/property/property.route";
+import { rentalRoutes } from "./modules/rental/rental.route";
+import { paymentRoutes } from "./modules/payment/payment.route";
+import { reviewRoutes } from "./modules/review/review.route";
 
 export const app: Application = express();
 
@@ -30,6 +31,7 @@ app.use("/api/categories", categoryRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/landlord", rentalRoutes);
 app.use("/api", rentalRoutes);
+app.use("/api", paymentRoutes);
 app.use("/api", reviewRoutes);
 
 app.get("/", (req: Request, res: Response) => {

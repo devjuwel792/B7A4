@@ -48,7 +48,7 @@ const updateUserStatus = async (req: Request, res: Response) => {
 
 const getAllProperties = async (req: Request, res: Response) => {
   try {
-    const { prisma } = await import("../lib/prisma");
+    const { prisma } = await import("../../lib/prisma");
     const properties = await prisma.property.findMany({
       include: {
         category: { select: { id: true, name: true } },

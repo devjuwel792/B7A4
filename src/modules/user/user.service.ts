@@ -1,4 +1,4 @@
-import { prisma } from "../lib/prisma";
+import { prisma } from "../../lib/prisma";
 
 const getAllUsers = async (role?: string) => {
   const whereClause = role
@@ -80,6 +80,6 @@ const getAllRentals = async () => {
 export const AdminService = {
   getAllUsers,
   updateUserStatus,
- 
+
   getAllRentals,
 };

@@ -1,5 +1,5 @@
-import { prisma } from "../lib/prisma";
-import type { Prisma } from "../../generated/prisma/client";
+import { prisma } from "../../lib/prisma";
+import type { Prisma } from "../../../generated/prisma/client";
 
 interface CreatePropertyData {
   title: string;
