@@ -8,7 +8,7 @@ const registerUser = async (data: {
   email: string;
   password: string;
   phone?: string;
-  role: "TENANT" | "LANDLORD" | "ADMIN";
+  role: "TENANT" | "LANDLORD" ;
 }) => {
   const isUserExist = await prisma.user.findUnique({
     where: { email: data.email },
@@ -124,9 +124,41 @@ const generateTokens = (userId: string, role: string) => {
   return { accessToken, refreshToken };
 };
 
+const refreshAccessToken = async (refreshToken: string) => {
+  if (!refreshToken) {
+    throw new Error("Refresh token required");
+  }
+
+  const decoded = jwt.verify(
+    refreshToken,
+    config.jwt_refresh_secret as string,
+  ) as { userId: string; role: string };
+
+  const user = await prisma.user.findUnique({
+    where: { id: decoded.userId },
+    select: { id: true, role: true, status: true },
+  });
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  if (user.status === "BANNED") {
+    throw new Error("Your account has been banned");
+  }
+
+  const { accessToken, refreshToken: newRefreshToken } = generateTokens(
+    user.id,
+    user.role,
+  );
+
+  return { accessToken, refreshToken: newRefreshToken };
+};
+
 export const AuthService = {
   registerUser,
   loginUser,
   getMe,
+  refreshAccessToken,
   generateTokens,
 };

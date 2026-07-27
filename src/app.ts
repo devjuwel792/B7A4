@@ -11,6 +11,7 @@ import { propertyRoutes } from "./modules/property/property.route";
 import { rentalRoutes } from "./modules/rental/rental.route";
 import { paymentRoutes } from "./modules/payment/payment.route";
 import { reviewRoutes } from "./modules/review/review.route";
+import globalErrorHandler from "./middleware/error.middleware";
 
 export const app: Application = express();
 
@@ -29,7 +30,6 @@ app.use("/api/auth", authRoutes);
 app.use("/api/properties", propertyRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/admin", adminRoutes);
-app.use("/api/landlord", rentalRoutes);
 app.use("/api", rentalRoutes);
 app.use("/api", paymentRoutes);
 app.use("/api", reviewRoutes);
@@ -37,3 +37,5 @@ app.use("/api", reviewRoutes);
 app.get("/", (req: Request, res: Response) => {
   res.send("RentNest API is running");
 });
+
+app.use(globalErrorHandler);

@@ -12,10 +12,10 @@ const register = async (req: Request, res: Response) => {
       });
     }
 
-    if (!["TENANT", "LANDLORD", "ADMIN"].includes(role)) {
+    if (!["TENANT", "LANDLORD"].includes(role)) {
       return res.status(400).json({
         success: false,
-        message: "Role must be TENANT, LANDLORD, or ADMIN",
+        message: "Role must be TENANT, LANDLORD",
       });
     }
 
@@ -109,8 +109,44 @@ const getMe = async (req: Request, res: Response) => {
   }
 };
 
+const refresh = async (req: Request, res: Response) => {
+  try {
+    const refreshToken = req.cookies?.refreshToken;
+
+    if (!refreshToken) {
+      return res.status(401).json({
+        success: false,
+        message: "Refresh token not found",
+      });
+    }
+
+    const result = await AuthService.refreshAccessToken(refreshToken);
+
+    res.cookie("refreshToken", result.refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Token refreshed successfully",
+      data: {
+        accessToken: result.accessToken,
+      },
+    });
+  } catch (error: any) {
+    res.status(401).json({
+      success: false,
+      message: error.message || "Failed to refresh token",
+    });
+  }
+};
+
 export const AuthController = {
   register,
   login,
   getMe,
+  refresh,
 };
