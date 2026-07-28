@@ -8,7 +8,7 @@ const registerUser = async (data: {
   email: string;
   password: string;
   phone?: string;
-  role: "TENANT" | "LANDLORD" | "ADMIN";
+  role: "TENANT" | "LANDLORD";
 }) => {
   const isUserExist = await prisma.user.findUnique({
     where: { email: data.email },
