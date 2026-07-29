@@ -15,6 +15,7 @@ const createCheckoutSession = async (rentalId: string, userId: string) => {
       },
     },
   });
+  
 
   if (!rental) {
     throw new Error("Rental request not found");
