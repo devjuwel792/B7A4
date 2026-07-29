@@ -1,6 +1,6 @@
 import { Router } from "express";
-import authMiddleware, { roleGuard } from "../../middleware/auth.middleware";
-import { PropertyController } from "./property.controller";
+import authMiddleware, { roleGuard } from "../../middleware/auth.middleware.js";
+import { PropertyController } from "./property.controller.js";
 
 const router = Router();
 

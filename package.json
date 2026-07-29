@@ -8,9 +8,9 @@
   "main": "server.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node dist/server.js",
     "dev": "tsx watch src/server.ts",
-    "build": "tsc",
-    "start": "node dist/server.js"
+    "build": "tsup"
   },
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.10",
@@ -36,6 +36,8 @@
     "jsonwebtoken": "^9.0.3",
     "morgan": "^1.11.0",
     "pg": "^8.22.0",
-    "stripe": "^22.3.2"
+    "stripe": "^22.3.2",
+    "tsup": "^8.5.1",
+    "vercel": "^58.0.0"
   }
 }

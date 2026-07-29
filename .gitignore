@@ -4,3 +4,4 @@ dist
 .kombai
 
 /generated/prisma
+.vercel

@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { PropertyService } from "./property.service";
+import { PropertyService } from "./property.service.js";
 
 const createProperty = async (req: Request, res: Response) => {
   try {

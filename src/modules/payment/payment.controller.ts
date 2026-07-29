@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { PaymentService } from "./payment.service";
+import { PaymentService } from "./payment.service.js";
 
 const createCheckout = async (req: Request, res: Response) => {
   try {

@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { AdminService } from "./user.service";
+import { AdminService } from "./user.service.js";
 
 const getAllUsers = async (req: Request, res: Response) => {
   try {
@@ -48,7 +48,7 @@ const updateUserStatus = async (req: Request, res: Response) => {
 
 const getAllProperties = async (req: Request, res: Response) => {
   try {
-    const { prisma } = await import("../../lib/prisma");
+    const { prisma } = await import("../../lib/prisma.js");
     const properties = await prisma.property.findMany({
       include: {
         category: { select: { id: true, name: true } },

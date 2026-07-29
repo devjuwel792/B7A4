@@ -3,15 +3,15 @@ import cors from "cors";
 import express, { Application, type Request, type Response } from "express";
 import morgan from "morgan";
 
-import { authRoutes } from "./modules/auth/auth.route";
-import { categoryRoutes } from "./modules/category/category.route";
-import config from "./config";
-import { adminRoutes } from "./modules/user/user.route";
-import { propertyRoutes } from "./modules/property/property.route";
-import { rentalRoutes } from "./modules/rental/rental.route";
-import { paymentRoutes } from "./modules/payment/payment.route";
-import { reviewRoutes } from "./modules/review/review.route";
-import globalErrorHandler from "./middleware/error.middleware";
+import { authRoutes } from "./modules/auth/auth.route.js";
+import { categoryRoutes } from "./modules/category/category.route.js";
+import config from "./config/index.js";
+import { adminRoutes } from "./modules/user/user.route.js";
+import { propertyRoutes } from "./modules/property/property.route.js";
+import { rentalRoutes } from "./modules/rental/rental.route.js";
+import { paymentRoutes } from "./modules/payment/payment.route.js";
+import { reviewRoutes } from "./modules/review/review.route.js";
+import globalErrorHandler from "./middleware/error.middleware.js";
 
 export const app: Application = express();
 

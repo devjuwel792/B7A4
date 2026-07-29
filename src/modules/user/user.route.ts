@@ -1,6 +1,6 @@
 import { Router } from "express";
-import authMiddleware, { roleGuard } from "../../middleware/auth.middleware";
-import { AdminController } from "./user.controller";
+import authMiddleware, { roleGuard } from "../../middleware/auth.middleware.js";
+import { AdminController } from "./user.controller.js";
 
 const router = Router();
 

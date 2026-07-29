@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { RentalService } from "./rental.service";
+import { RentalService } from "./rental.service.js";
 
 const getLandlordRequests = async (req: Request, res: Response) => {
   try {

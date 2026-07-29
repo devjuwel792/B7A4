@@ -1,6 +1,6 @@
 import { Router } from "express";
-import authMiddleware, { roleGuard } from "../../middleware/auth.middleware";
-import { CategoryController } from "./category.controller";
+import authMiddleware, { roleGuard } from "../../middleware/auth.middleware.js";
+import { CategoryController } from "./category.controller.js";
 
 const router = Router();
 
