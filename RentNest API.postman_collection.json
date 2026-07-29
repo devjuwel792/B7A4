@@ -1,0 +1,1241 @@
+{
+  "info": {
+    "_postman_id": "791c9338-674a-4cb5-8ec2-0146d159dd06",
+    "name": "RentNest API Copy 2",
+    "description": "RentNest - Rental Property Management API\n\nBase URL: http://localhost:3000\n\nWorkflow:\n1. Register/Login as TENANT or LANDLORD\n2. Copy accessToken from login response → set {{authToken}}\n3. Landlord: Create Category (as ADMIN) → Create Property → Manage Requests\n4. Tenant: Browse Properties → Send Rental Request → Pay → Review",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "50569372",
+    "_collection_link": "https://go.postman.co/collection/50569372-791c9338-674a-4cb5-8ec2-0146d159dd06?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register - Tenant",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Rahim Uddin\",\n  \"email\": \"rahim@tenant.com\",\n  \"password\": \"password123\",\n  \"phone\": \"+8801712345678\",\n  \"role\": \"TENANT\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
+            },
+            "description": "Register a new tenant user"
+          },
+          "response": []
+        },
+        {
+          "name": "Register - Landlord",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Kamal Hossain\",\n  \"email\": \"kamal@landlord.com\",\n  \"password\": \"password123\",\n  \"phone\": \"+8801812345678\",\n  \"role\": \"LANDLORD\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
+            },
+            "description": "Register a new landlord user"
+          },
+          "response": []
+        },
+        {
+          "name": "Login - Tenant",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.success && jsonData.data.accessToken) {",
+                  "    pm.collectionVariables.set('authToken', jsonData.data.accessToken);",
+                  "    pm.collectionVariables.set('userId', jsonData.data.user.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"rahim@tenant.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Login as tenant - auto-saves authToken and userId"
+          },
+          "response": []
+        },
+        {
+          "name": "Login - Landlord",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.success && jsonData.data.accessToken) {",
+                  "    pm.collectionVariables.set('authToken', jsonData.data.accessToken);",
+                  "    pm.collectionVariables.set('userId', jsonData.data.user.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"kamal@landlord.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Login as landlord - auto-saves authToken and userId"
+          },
+          "response": []
+        },
+        {
+          "name": "Login - Admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.success && jsonData.data.accessToken) {",
+                  "    pm.collectionVariables.set('authToken', jsonData.data.accessToken);",
+                  "    pm.collectionVariables.set('userId', jsonData.data.user.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@rentnest.com\",\n  \"password\": \"admin123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Login as admin - auto-saves authToken and userId"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Me (Profile)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "me"
+              ]
+            },
+            "description": "Get currently logged-in user profile"
+          },
+          "response": []
+        }
+      ],
+      "description": "Authentication endpoints - Register, Login, Profile"
+    },
+    {
+      "name": "Categories",
+      "item": [
+        {
+          "name": "List All Categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/categories",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "categories"
+              ]
+            },
+            "description": "Get all property categories (Public)"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Category By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/categories/{{categoryId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "categories",
+                "{{categoryId}}"
+              ]
+            },
+            "description": "Get a single category by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Category (Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.success && jsonData.data && jsonData.data.id) {",
+                  "    pm.collectionVariables.set('categoryId', jsonData.data.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Apartment\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/categories",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "categories"
+              ]
+            },
+            "description": "Create a new category (ADMIN only) - auto-saves categoryId"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Category (Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Luxury Apartment\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/categories/{{categoryId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "categories",
+                "{{categoryId}}"
+              ]
+            },
+            "description": "Update category name (ADMIN only)"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Category (Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/categories/{{categoryId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "categories",
+                "{{categoryId}}"
+              ]
+            },
+            "description": "Delete a category (ADMIN only)"
+          },
+          "response": []
+        }
+      ],
+      "description": "Property categories - Apartment, House, Villa etc."
+    },
+    {
+      "name": "Properties",
+      "item": [
+        {
+          "name": "List All Properties",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/properties?location=Dhaka&minRent=5000&maxRent=50000&bedrooms=2",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ],
+              "query": [
+                {
+                  "key": "location",
+                  "value": "Dhaka",
+                  "description": "Filter by location"
+                },
+                {
+                  "key": "minRent",
+                  "value": "5000",
+                  "description": "Minimum rent amount"
+                },
+                {
+                  "key": "maxRent",
+                  "value": "50000",
+                  "description": "Maximum rent amount"
+                },
+                {
+                  "key": "categoryId",
+                  "value": "",
+                  "description": "Filter by category ID",
+                  "disabled": true
+                },
+                {
+                  "key": "bedrooms",
+                  "value": "2",
+                  "description": "Number of bedrooms"
+                },
+                {
+                  "key": "search",
+                  "value": "furnished",
+                  "description": "Search keyword",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Get all properties with optional filters (Public)"
+          },
+          "response": []
+        },
+        {
+          "name": "List Properties - No Filters",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/properties",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            },
+            "description": "Get all properties without any filters"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Property By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/properties/{{propertyId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "{{propertyId}}"
+              ]
+            },
+            "description": "Get property details by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Property (Landlord)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.success && jsonData.data && jsonData.data.id) {",
+                  "    pm.collectionVariables.set('propertyId', jsonData.data.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Spacious 2BR Apartment in Banani\",\n  \"description\": \"A beautiful 2-bedroom apartment in the heart of Banani with modern amenities, natural lighting, and 24/7 security. Close to shopping malls and restaurants.\",\n  \"address\": \"Road 11, House 42, Banani, Dhaka 1213\",\n  \"location\": \"Banani, Dhaka\",\n  \"rent\": 25000,\n  \"bedrooms\": 2,\n  \"bathrooms\": 2,\n  \"area\": 1200,\n  \"amenities\": [\"Parking\", \"Security\", \"Lift\", \"Gas\", \"Internet\", \"Generator\"],\n  \"images\": [\"https://example.com/img1.jpg\", \"https://example.com/img2.jpg\"],\n  \"categoryId\": \"{{categoryId}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/properties",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "properties"
+              ]
+            },
+            "description": "Create a new property listing (LANDLORD only) - auto-saves propertyId"
+          },
+          "response": []
+        },
+        {
+          "name": "Get My Properties (Landlord)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/properties/my-properties",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "my-properties"
+              ]
+            },
+            "description": "Get all properties owned by logged-in landlord"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Property (Landlord)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Spacious 2BR Apartment in Banani - Updated\",\n  \"rent\": 28000,\n  \"amenities\": [\"Parking\", \"Security\", \"Lift\", \"Gas\", \"Internet\", \"Generator\", \"Swimming Pool\"]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/properties/{{propertyId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "{{propertyId}}"
+              ]
+            },
+            "description": "Update property details (LANDLORD only)"
+          },
+          "response": []
+        },
+        {
+          "name": "Toggle Availability (Landlord)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/properties/{{propertyId}}/availability",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "{{propertyId}}",
+                "availability"
+              ]
+            },
+            "description": "Toggle property available/unavailable status (LANDLORD only)"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Property (Landlord)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/properties/{{propertyId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "properties",
+                "{{propertyId}}"
+              ]
+            },
+            "description": "Delete a property listing (LANDLORD only)"
+          },
+          "response": []
+        }
+      ],
+      "description": "Property listings - CRUD operations"
+    },
+    {
+      "name": "Rentals",
+      "item": [
+        {
+          "name": "Create Rental Request (Tenant)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.success && jsonData.data && jsonData.data.id) {",
+                  "    pm.collectionVariables.set('rentalId', jsonData.data.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"propertyId\": \"{{propertyId}}\",\n  \"moveInDate\": \"2026-08-15T00:00:00.000Z\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/rentals",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "rentals"
+              ]
+            },
+            "description": "Submit a rental request for a property (TENANT only) - auto-saves rentalId"
+          },
+          "response": []
+        },
+        {
+          "name": "Get My Rentals (Tenant)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/rentals",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "rentals"
+              ]
+            },
+            "description": "Get all rental requests made by logged-in user"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Rental By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/rentals/{{rentalId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "rentals",
+                "{{rentalId}}"
+              ]
+            },
+            "description": "Get rental request details by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Landlord Requests (Landlord)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/landlord/requests",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "landlord",
+                "requests"
+              ]
+            },
+            "description": "Get all incoming rental requests for landlord's properties"
+          },
+          "response": []
+        },
+        {
+          "name": "Approve Rental Request (Landlord)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"APPROVED\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/landlord/requests/{{rentalId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "landlord",
+                "requests",
+                "{{rentalId}}"
+              ]
+            },
+            "description": "Approve a rental request (LANDLORD only)"
+          },
+          "response": []
+        },
+        {
+          "name": "Reject Rental Request (Landlord)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"REJECTED\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/landlord/requests/{{rentalId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "landlord",
+                "requests",
+                "{{rentalId}}"
+              ]
+            },
+            "description": "Reject a rental request (LANDLORD only)"
+          },
+          "response": []
+        }
+      ],
+      "description": "Rental request management - Tenant requests & Landlord approvals"
+    },
+    {
+      "name": "Reviews",
+      "item": [
+        {
+          "name": "Create Review (Tenant)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"propertyId\": \"{{propertyId}}\",\n  \"rating\": 5,\n  \"comment\": \"Excellent apartment! Very clean, well-maintained, and the landlord is super responsive. The location is perfect with easy access to restaurants and shops. Highly recommended!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/reviews",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "reviews"
+              ]
+            },
+            "description": "Leave a review for a property (TENANT only, rating 1-5)"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Review - Average (Tenant)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"propertyId\": \"{{propertyId}}\",\n  \"rating\": 3,\n  \"comment\": \"Decent place for the price. The apartment is okay but could use some renovation. Internet speed is average. Good location though.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/reviews",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "reviews"
+              ]
+            },
+            "description": "Leave an average review (TENANT only, rating 3)"
+          },
+          "response": []
+        }
+      ],
+      "description": "Property review system"
+    },
+    {
+      "name": "Payments",
+      "item": [
+        {
+          "name": "Confirm Payment",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/payments/confirm?session_id=cs_test_a1lcjbgnup3a1I3zRKi9IrOcO0Q04WP04FkWd2USowVHKbR0pL0w8Rk0EG",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "payments",
+                "confirm"
+              ],
+              "query": [
+                {
+                  "key": "session_id",
+                  "value": "cs_test_a1lcjbgnup3a1I3zRKi9IrOcO0Q04WP04FkWd2USowVHKbR0pL0w8Rk0EG",
+                  "description": "Stripe session ID"
+                }
+              ]
+            },
+            "description": "Confirm payment after Stripe redirect (callback URL). NOTE: Payment routes are currently commented out in app.ts"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Checkout Session (Tenant)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.success && jsonData.data) {",
+                  "    if (jsonData.data.paymentId) {",
+                  "        pm.collectionVariables.set('paymentId', jsonData.data.paymentId);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rentalId\": \"{{rentalId}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/payments/create",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "payments",
+                "create"
+              ]
+            },
+            "description": "Create Stripe checkout session for rental payment (TENANT only). NOTE: Payment routes are currently commented out in app.ts"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Payment History",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/payments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "payments"
+              ]
+            },
+            "description": "Get payment history for logged-in user. NOTE: Payment routes are currently commented out in app.ts"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Payment By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/payments/{{paymentId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "payments",
+                "{{paymentId}}"
+              ]
+            },
+            "description": "Get payment details by ID. NOTE: Payment routes are currently commented out in app.ts"
+          },
+          "response": []
+        }
+      ],
+      "description": "Payment management via Stripe (Currently commented out in app.ts)"
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "users"
+              ]
+            },
+            "description": "Get all users in the system (ADMIN only)"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Users - Filter by Role",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/users?role=TENANT",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "users"
+              ],
+              "query": [
+                {
+                  "key": "role",
+                  "value": "TENANT",
+                  "description": "Filter by role: TENANT, LANDLORD, ADMIN"
+                }
+              ]
+            },
+            "description": "Get users filtered by role (ADMIN only)"
+          },
+          "response": []
+        },
+        {
+          "name": "Ban User (Admin)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"BANNED\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/users/{{userId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "users",
+                "{{userId}}"
+              ]
+            },
+            "description": "Ban a user (ADMIN only)"
+          },
+          "response": []
+        },
+        {
+          "name": "Unban User (Admin)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"ACTIVE\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/users/{{userId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "users",
+                "{{userId}}"
+              ]
+            },
+            "description": "Unban a user (ADMIN only)"
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Properties (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/properties",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "properties"
+              ]
+            },
+            "description": "Get all properties with landlord info and counts (ADMIN only)"
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Rentals (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/rentals",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "rentals"
+              ]
+            },
+            "description": "Get all rental requests in the system (ADMIN only)"
+          },
+          "response": []
+        }
+      ],
+      "description": "Admin panel endpoints - User management, system overview"
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "authToken",
+      "value": ""
+    },
+    {
+      "key": "userId",
+      "value": ""
+    },
+    {
+      "key": "propertyId",
+      "value": ""
+    },
+    {
+      "key": "categoryId",
+      "value": ""
+    },
+    {
+      "key": "rentalId",
+      "value": ""
+    },
+    {
+      "key": "paymentId",
+      "value": ""
+    }
+  ]
+}
